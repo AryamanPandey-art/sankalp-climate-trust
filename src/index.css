@@ -1,0 +1,251 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    /* Fonts */
+    --font-serif: 'Newsreader', 'Cormorant Garamond', Georgia, serif;
+    --font-display: 'Outfit', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Theme: Dark Mode (Default) */
+    --bg-primary: #090e17;
+    --bg-secondary: #0d1422;
+    --bg-surface: #111a2c;
+    --bg-surface-hover: #17233a;
+    --bg-inset: #060a10;
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-inverse: #090e17;
+    
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --border-accent: rgba(16, 185, 129, 0.3);
+    
+    --accent-primary: #10b981;
+    --accent-primary-hover: #059669;
+    --accent-cyan: #06b6d4;
+    --accent-amber: #f59e0b;
+    --accent-rose: #f43f5e;
+    --accent-botanical: #064e3b;
+    --accent-terracotta: #c05638;
+
+    --badge-bg-verified: rgba(16, 185, 129, 0.14);
+    --badge-text-verified: #34d399;
+    --badge-border-verified: rgba(16, 185, 129, 0.35);
+
+    --badge-bg-anomaly: rgba(244, 63, 94, 0.14);
+    --badge-text-anomaly: #fb7185;
+    --badge-border-anomaly: rgba(244, 63, 94, 0.35);
+
+    --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+    --elevation-low: 0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Light Mode - "Climate Intelligence in Daylight" (warm editorial ivory & botanical tones) */
+  [data-theme="light"] {
+    --bg-primary: #faf8f2;
+    --bg-secondary: #f3efe5;
+    --bg-surface: #ffffff;
+    --bg-surface-hover: #fcfbf8;
+    --bg-inset: #ede7da;
+
+    --text-primary: #18221b;
+    --text-secondary: #4a574e;
+    --text-muted: #728176;
+    --text-inverse: #ffffff;
+
+    --border-subtle: #e5ded3;
+    --border-strong: #d4ccbf;
+    --border-accent: rgba(27, 115, 64, 0.35);
+
+    --accent-primary: #1b7340;
+    --accent-primary-hover: #145a32;
+    --accent-cyan: #0284c7;
+    --accent-amber: #d97706;
+    --accent-rose: #be3b50;
+    --accent-botanical: #145a32;
+    --accent-terracotta: #c25e3e;
+
+    --badge-bg-verified: rgba(27, 115, 64, 0.1);
+    --badge-text-verified: #1b7340;
+    --badge-border-verified: rgba(27, 115, 64, 0.3);
+
+    --badge-bg-anomaly: rgba(194, 94, 62, 0.12);
+    --badge-text-anomaly: #a84524;
+    --badge-border-anomaly: rgba(194, 94, 62, 0.35);
+
+    --card-shadow: 0 4px 20px -2px rgba(45, 55, 45, 0.06), 0 1px 3px 0 rgba(45, 55, 45, 0.03);
+    --elevation-low: 0 1px 4px rgba(45, 55, 45, 0.05);
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+  }
+
+  .font-serif {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Editorial Glass & Tonal Panels */
+.glass-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--card-shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+[data-theme="dark"] .glass-panel {
+  background: rgba(12, 17, 26, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+[data-theme="light"] .glass-panel {
+  background: #ffffff;
+  border-color: #e5ded1;
+  box-shadow: 0 4px 20px -2px rgba(35, 48, 38, 0.06), 0 1px 2px rgba(35, 48, 38, 0.04);
+}
+
+.glass-panel-glow {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-accent);
+  box-shadow: var(--card-shadow);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .glass-panel-glow {
+  background: rgba(11, 19, 27, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 35px rgba(16, 185, 129, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .glass-panel-glow {
+  background: #ffffff;
+  border: 1px solid rgba(35, 83, 39, 0.3);
+  box-shadow: 0 8px 30px -4px rgba(35, 83, 39, 0.08), 0 2px 6px rgba(35, 83, 39, 0.04);
+}
+
+.glass-panel-warning {
+  background: var(--bg-surface);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .glass-panel-warning {
+  background: rgba(24, 15, 18, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 0 35px rgba(244, 63, 94, 0.08);
+}
+
+[data-theme="light"] .glass-panel-warning {
+  background: #fffafa;
+  border-color: rgba(194, 94, 62, 0.35);
+  box-shadow: 0 8px 30px -4px rgba(194, 94, 62, 0.08);
+}
+
+/* Inset Surface (field notebook & telemetry look) */
+.surface-inset {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0.75rem;
+}
+
+/* Map Tile Custom Inversion for Dark Theme */
+.dark-map .leaflet-tile-container img {
+  filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+/* Map Tile Treatment for Light Theme - warm natural terrain tone */
+.light-map .leaflet-tile-container img {
+  filter: saturate(0.85) contrast(1.05) sepia(0.08);
+}
+
+/* Premium range slider styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--border-strong);
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--border-subtle);
+  box-shadow: var(--elevation-low);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  background: var(--accent-primary);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(16, 185, 129, 0.25);
+  color: inherit;
+}
